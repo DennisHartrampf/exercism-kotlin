@@ -4,7 +4,7 @@ class Hamming {
             if (string1.length != string2.length) {
                 throw IllegalArgumentException("left and right strands must be of equal length.")
             }
-            return string1.zip(string2).count { pair -> pair.first != pair.second }
+            return string1.zip(string2).count { (first, second) -> first != second }
         }
     }
 }
