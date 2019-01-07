@@ -1,17 +1,13 @@
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class Gigasecond(date: LocalDateTime) {
-    val date: LocalDateTime
+class Gigasecond(birthDate: LocalDateTime) {
+    val date: LocalDateTime = birthDate.plusSeconds(GIGA_SECOND)
 
-    init {
-        this.date = date.plusSeconds(GIGASECOND)
-    }
-
-    constructor(date: LocalDate) : this(date.atStartOfDay())
+    constructor(birthDate: LocalDate) : this(birthDate.atStartOfDay())
 
     companion object {
-        const val GIGASECOND = 1e9.toLong()
+        const val GIGA_SECOND = 1e9.toLong()
     }
 
 }
