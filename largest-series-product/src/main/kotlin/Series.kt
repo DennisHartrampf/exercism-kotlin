@@ -5,7 +5,7 @@ internal class Series(input: String) {
         return when {
             windowSize == 0 -> 1
             windowSize > input.size -> throw IllegalArgumentException()
-            else -> input.windowed(windowSize).maxBy { it.reduce(Int::times) }!!.reduce(Int::times)
+            else -> input.windowed(windowSize).map { it.reduce(Int::times) }.max()!!
         }
     }
 
