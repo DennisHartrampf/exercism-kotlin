@@ -1,5 +1,5 @@
 object ScrabbleScore {
-    fun scoreWord(input: String) = input.map { it.score() }.sum()
+    fun scoreWord(input: String) = input.sumBy { it.score() }
 
     private fun Char.score() = when (this.toUpperCase()) {
         'A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T' -> 1
