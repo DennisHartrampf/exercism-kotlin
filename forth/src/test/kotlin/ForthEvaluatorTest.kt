@@ -153,7 +153,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("2 4 * 3 /")))
     }
 
-    @Ignore
     @Test
     fun testDupCopiesTheTopValueOnTheStack() {
         assertEquals(
@@ -161,15 +160,13 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 dup")))
     }
 
-    @Ignore
     @Test
     fun testDupParsingIsCaseInsensitive() {
         assertEquals(
                 listOf(1, 2, 2),
-                forthEvaluator.evaluateProgram(listOf("1 2 dup")))
+                forthEvaluator.evaluateProgram(listOf("1 2 DuP")))
     }
 
-    @Ignore
     @Test
     fun testErrorIfDuplicatingAttemptedWithNothingOnTheStack() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -178,7 +175,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("dup"))
     }
 
-    @Ignore
     @Test
     fun testDropRemovesTheTopValueOnTheStackIfItIsTheOnlyOne() {
         assertEquals(
@@ -186,7 +182,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 drop")))
     }
 
-    @Ignore
     @Test
     fun testDropRemovesTheTopValueOnTheStackIfItIsNotTheOnlyOne() {
         assertEquals(
@@ -194,7 +189,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 2 drop")))
     }
 
-    @Ignore
     @Test
     fun testErrorIfDroppingAttemptedWithNothingOnTheStack() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -203,7 +197,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("drop"))
     }
 
-    @Ignore
     @Test
     fun testSwapSwapsTheTopTwosValueOnTheStackIfTheyAreTheOnlyOnes() {
         assertEquals(
@@ -211,7 +204,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 2 swap")))
     }
 
-    @Ignore
     @Test
     fun testSwapSwapsTheTopTwosValueOnTheStackIfTheyAreNotTheOnlyOnes() {
         assertEquals(
@@ -219,7 +211,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 2 3 swap")))
     }
 
-    @Ignore
     @Test
     fun testErrorIfSwappingAttemptedWithNothingOnTheStack() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -228,7 +219,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("swap"))
     }
 
-    @Ignore
     @Test
     fun testErrorIfSwappingAttemptedWithOneNumberOnTheStack() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -237,7 +227,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("1 swap"))
     }
 
-    @Ignore
     @Test
     fun testOverCopiesTheSecondElementIfThereAreOnlyTwo() {
         assertEquals(
@@ -245,7 +234,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 2 over")))
     }
 
-    @Ignore
     @Test
     fun testOverCopiesTheSecondElementIfThereAreMoreThanTwo() {
         assertEquals(
@@ -253,7 +241,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf("1 2 3 over")))
     }
 
-    @Ignore
     @Test
     fun testErrorIfOveringAttemptedWithNothingOnTheStack() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -262,7 +249,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("over"))
     }
 
-    @Ignore
     @Test
     fun testErrorIfOveringAttemptedWithOneNumberOnTheStack() {
         expectedException.expect(IllegalArgumentException::class.java)
