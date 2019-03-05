@@ -257,7 +257,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("1 over"))
     }
 
-    @Ignore
     @Test
     fun testUserDefinedOperatorsCanConsistOfBuiltInOperators() {
         assertEquals(
