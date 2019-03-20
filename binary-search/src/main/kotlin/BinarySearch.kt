@@ -1,19 +1,18 @@
 object BinarySearch {
     fun <T : Comparable<T>> search(list: List<T>, element: T): Int {
-        return search(list, element, 0, list.size)
+        var left = 0
+        var right = list.size
+        while (left < right) {
+            val size = right - left
+            val pivotIndex = left + size / 2
+            val pivotElement = list[pivotIndex]
+            when {
+                pivotElement == element -> return pivotIndex
+                element < pivotElement -> right = pivotIndex
+                else -> left = pivotIndex + 1
+            }
+        }
+        return -1
     }
 
-    private fun <T : Comparable<T>> search(list: List<T>, element: T, start: Int, end: Int): Int {
-        val listSize = end - start
-        if (listSize == 0) {
-            return -1
-        }
-        val pivotIndex = start + listSize / 2
-        val pivotElement = list[pivotIndex]
-        return when {
-            pivotElement == element -> pivotIndex
-            element < pivotElement -> search(list, element, start, pivotIndex)
-            else -> search(list, element, pivotIndex + 1, end)
-        }
-    }
 }
