@@ -264,7 +264,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf(": dup-twice dup dup ;", "1 dup-twice")))
     }
 
-    @Ignore
     @Test
     fun testUserDefinedOperatorsAreEvaluatedInTheCorrectOrder() {
         assertEquals(
@@ -272,7 +271,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf(": countup 1 2 3 ;", "countup")))
     }
 
-    @Ignore
     @Test
     fun testCanRedefineAUserDefinedOperator() {
         assertEquals(

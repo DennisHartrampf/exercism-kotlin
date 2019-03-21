@@ -2,10 +2,10 @@ import java.util.*
 
 class ForthEvaluator {
     private val stack = LinkedList<Int>()
-    private val definitions = mutableMapOf<String, List<Operations>>()
+    private val definitions = mutableMapOf<String, List<Any>>()
     private var defining = false
     private var definitionName: String? = null
-    private var definitionOperations = mutableListOf<Operations>()
+    private var definitionOperations = mutableListOf<Any>()
 
     fun evaluateProgram(instructions: List<String>): List<Int> {
         instructions.forEach { line ->
@@ -28,7 +28,7 @@ class ForthEvaluator {
         val definition = definitions[word]
         val operation = Operations.of(word)
         return when {
-            definition != null -> definition
+            definition != null -> word
             DEFINITION_START.matches(word) -> DefinitionStart
             DEFINITION_END.matches(word) -> DefinitionEnd
             operation != null -> operation
@@ -38,13 +38,15 @@ class ForthEvaluator {
     }
 
     private fun evaluateToken(token: Any) {
+        val definition = definitions[token]
         when {
             token is DefinitionStart -> defining = true
             token is DefinitionEnd -> define()
             defining && definitionName == null -> definitionName = token as String
-            defining -> definitionOperations.add(token as Operations)
+            defining -> definitionOperations.add(token)
             token is Int -> stack.push(token)
             token is Operations -> token.performOperation(stack)
+            definition != null -> definition.forEach { evaluateToken(it) }
             else -> throw IllegalArgumentException("Unknown token: $token")
         }
     }
