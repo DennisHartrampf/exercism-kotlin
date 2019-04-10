@@ -9,38 +9,26 @@ class ForthEvaluator {
 
     fun evaluateProgram(instructions: List<String>): List<Int> {
         instructions.forEach { line ->
-            line.split(" ").map { tokenize(it) }.forEach {
+            line.split(" ").forEach {
                 evaluateToken(it)
             }
         }
         return stack.reversed()
     }
 
-    private fun tokenize(word: String): Any {
+    private fun evaluateToken(word: Any) {
         val definition = definitions[word]
-        val operation = Operations.of(word)
-        return when {
-            definition != null -> word
-            DEFINITION_START.matches(word) -> DefinitionStart
-            DEFINITION_END.matches(word) -> DefinitionEnd
-            operation != null -> operation
-            NUMBER.matches(word) -> word.toInt()
-            else -> word
-        }
-    }
-
-    private fun evaluateToken(token: Any) {
-        val definition = definitions[token]
+        val operation = if (word is String) Operations.of(word) else null
         when {
-            token is List<*> -> token.forEach { evaluateToken(it!!) }
-            token is DefinitionStart -> defining = true
-            token is DefinitionEnd -> define()
-            defining && definitionName == null -> definitionName = token as String
-            defining -> definitionOperations.add(token)
-            token is Int -> stack.push(token)
-            token is Operations -> token.performOperation(stack)
+            word is String && DEFINITION_START.matches(word) -> defining = true
+            word is String && DEFINITION_END.matches(word) -> define()
+            defining && definitionName == null -> definitionName = word as String
+            defining -> definitionOperations.add(word)
             definition != null -> definition.forEach { evaluateToken(it) }
-            else -> throw IllegalArgumentException("Unknown token: $token")
+            word is List<*> -> word.forEach { evaluateToken(it!!) }
+            operation != null -> operation.performOperation(stack)
+            word is String && NUMBER.matches(word) -> stack.push(word.toInt())
+            else -> throw IllegalArgumentException("Unknown word: $word")
         }
     }
 
@@ -55,9 +43,6 @@ class ForthEvaluator {
         val NUMBER = Regex("[0-9]+")
         val DEFINITION_START = Regex(":")
         val DEFINITION_END = Regex(";")
-
-        object DefinitionStart
-        object DefinitionEnd
     }
 
 }

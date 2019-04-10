@@ -278,7 +278,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf(": foo dup ;", ": foo dup dup ;", "1 foo")))
     }
 
-    @Ignore
     @Test
     fun testCanOverrideBuiltInWordOperators() {
         assertEquals(
