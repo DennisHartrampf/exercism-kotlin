@@ -2,16 +2,7 @@ import java.util.*
 
 class ForthEvaluator {
     private val stack = LinkedList<Int>()
-    private val definitions = mutableMapOf<String, List<Any>>()
-    private var defining = false
-    private var definitionName: String? = null
-        set(value) = if (value != null && NUMBER.matches(value)) {
-            throw IllegalArgumentException("Cannot redefine numbers")
-        } else {
-            field = value
-        }
-
-    private var definitionOperations = mutableListOf<Any>()
+    private val definitionsHolder = DefinitionsHolder()
 
     fun evaluateProgram(instructions: List<String>): List<Int> {
         instructions.forEach { line ->
@@ -24,18 +15,18 @@ class ForthEvaluator {
 
     private fun evaluateToken(input: Any) {
         val token = toLowerCase(input)
-        val definition = definitions[token]
+        val definition = definitionsHolder.definitionFor(token)
         val operation = Operations.of(token)
         when {
-            token == DEFINITION_END -> define()
+            token == DEFINITION_END -> definitionsHolder.endDefining()
             token is String && token.endsWith(DEFINITION_END) -> {
                 evaluateToken(token.substring(0, token.length - 1))
                 evaluateToken(DEFINITION_END)
             }
-            token == DEFINITION_START -> defining = true
-            defining && definitionName == null -> definitionName = token as String
+            token == DEFINITION_START -> definitionsHolder.startDefining()
+            definitionsHolder.needsName() -> definitionsHolder.definitionName = token as String
             definition != null -> definition.forEach { evaluateToken(it) }
-            defining -> definitionOperations.add(token)
+            definitionsHolder.defining -> definitionsHolder.addOperation(token)
             token is List<*> -> token.forEach { evaluateToken(it!!) }
             operation != null -> operation.performOperation(stack)
             token is String && NUMBER.matches(token) -> stack.push(token.toInt())
@@ -49,15 +40,8 @@ class ForthEvaluator {
         input
     }
 
-    private fun define() {
-        defining = false
-        definitions[definitionName!!] = definitionOperations
-        definitionOperations = mutableListOf()
-        definitionName = null
-    }
-
     companion object {
-        val NUMBER = Regex("[0-9]+")
+        val NUMBER = Regex("\\d+")
         const val DEFINITION_START = ":"
         const val DEFINITION_END = ";"
     }
