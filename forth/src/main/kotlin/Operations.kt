@@ -38,8 +38,8 @@ enum class Operations(val token: kotlin.String, private val spokenName: kotlin.S
     companion object {
         private val map = values().map { Pair(it.token.toLowerCase(), it) }.toMap()
 
-        fun of(word: String): Operations? {
-            return map[word.toLowerCase()]
+        fun of(word: Any): Operations? {
+            return map[word]
         }
 
         private infix fun LinkedList<Int>.performBinaryOperation(binaryOperation: (Int, Int) -> Int) {

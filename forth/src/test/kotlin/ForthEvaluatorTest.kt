@@ -1,5 +1,4 @@
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -294,21 +293,19 @@ class ForthEvaluatorTest {
     }
 
     @Test
-    fun testCanUseDifferentWordsWithSameName(){
+    fun testCanUseDifferentWordsWithSameName() {
         assertEquals(
-                listOf(5,6),
+                listOf(5, 6),
                 forthEvaluator.evaluateProgram(listOf(": foo 5;", ": bar foo ;", ": foo 6 ;", "bar foo")))
     }
 
-    @Ignore
     @Test
-    fun testCanDefineWordThatUsesWordWithTheSameName(){
+    fun testCanDefineWordThatUsesWordWithTheSameName() {
         assertEquals(
                 listOf(11),
                 forthEvaluator.evaluateProgram(listOf(": foo 10;", ": foo foo 1 + ;", "foo")))
     }
 
-    @Ignore
     @Test
     fun testCannotRedefineNumbers() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -317,7 +314,6 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf(": 1 2 ;"))
     }
 
-    @Ignore
     @Test
     fun testErrorIfEvaluatingAnUndefinedOperator() {
         expectedException.expect(IllegalArgumentException::class.java)
@@ -326,51 +322,45 @@ class ForthEvaluatorTest {
         forthEvaluator.evaluateProgram(listOf("foo"))
     }
 
-    @Ignore
     @Test
-    fun testCaseInsensitivity(){
+    fun testCaseInsensitivity() {
         assertEquals(
-                listOf(1,1,1,1),
+                listOf(1, 1, 1, 1),
                 forthEvaluator.evaluateProgram(listOf("1 DUP Dup dup")))
     }
 
-    @Ignore
     @Test
-    fun testDropIsCaseInsensitive(){
+    fun testDropIsCaseInsensitive() {
         assertEquals(
                 listOf(1),
                 forthEvaluator.evaluateProgram(listOf("1 2 3 4 DROP Drop drop")))
     }
 
-    @Ignore
     @Test
-    fun testSwapIsCaseInsensitive(){
+    fun testSwapIsCaseInsensitive() {
         assertEquals(
-                listOf(2,3,4,1),
+                listOf(2, 3, 4, 1),
                 forthEvaluator.evaluateProgram(listOf("1 2 SWAP 3 Swap 4 swap")))
     }
 
-    @Ignore
     @Test
-    fun testOverIsCaseInsensitive(){
+    fun testOverIsCaseInsensitive() {
         assertEquals(
-                listOf(1,2,1,2,1),
+                listOf(1, 2, 1, 2, 1),
                 forthEvaluator.evaluateProgram(listOf("1 2 OVER Over over")))
     }
 
-    @Ignore
     @Test
-    fun testUserDefinedWordsAreCaseInsensitive(){
+    fun testUserDefinedWordsAreCaseInsensitive() {
         assertEquals(
-                listOf(1,1,1,1),
+                listOf(1, 1, 1, 1),
                 forthEvaluator.evaluateProgram(listOf(": foo dup;", "1 FOO Foo foo")))
     }
 
-    @Ignore
     @Test
-    fun testDefinitionsAreCaseInsensitive(){
+    fun testDefinitionsAreCaseInsensitive() {
         assertEquals(
-                listOf(1,1,1,1),
+                listOf(1, 1, 1, 1),
                 forthEvaluator.evaluateProgram(listOf(": SWAP DUP Dup dup ;", "1 swap")))
     }
 }

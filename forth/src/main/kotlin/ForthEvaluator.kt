@@ -5,6 +5,12 @@ class ForthEvaluator {
     private val definitions = mutableMapOf<String, List<Any>>()
     private var defining = false
     private var definitionName: String? = null
+        set(value) = if (value != null && NUMBER.matches(value)) {
+            throw IllegalArgumentException("Cannot redefine numbers")
+        } else {
+            field = value
+        }
+
     private var definitionOperations = mutableListOf<Any>()
 
     fun evaluateProgram(instructions: List<String>): List<Int> {
@@ -16,24 +22,31 @@ class ForthEvaluator {
         return stack.reversed()
     }
 
-    private fun evaluateToken(word: Any) {
-        val definition = definitions[word]
-        val operation = if (word is String) Operations.of(word) else null
+    private fun evaluateToken(input: Any) {
+        val token = toLowerCase(input)
+        val definition = definitions[token]
+        val operation = Operations.of(token)
         when {
-            word == DEFINITION_END -> define()
-            word is String && word.endsWith(DEFINITION_END) -> {
-                evaluateToken(word.substring(0, word.length - 1))
-                evaluateToken(";")
+            token == DEFINITION_END -> define()
+            token is String && token.endsWith(DEFINITION_END) -> {
+                evaluateToken(token.substring(0, token.length - 1))
+                evaluateToken(DEFINITION_END)
             }
-            word == DEFINITION_START -> defining = true
-            defining && definitionName == null -> definitionName = word as String
+            token == DEFINITION_START -> defining = true
+            defining && definitionName == null -> definitionName = token as String
             definition != null -> definition.forEach { evaluateToken(it) }
-            defining -> definitionOperations.add(word)
-            word is List<*> -> word.forEach { evaluateToken(it!!) }
+            defining -> definitionOperations.add(token)
+            token is List<*> -> token.forEach { evaluateToken(it!!) }
             operation != null -> operation.performOperation(stack)
-            word is String && NUMBER.matches(word) -> stack.push(word.toInt())
-            else -> throw IllegalArgumentException("Unknown word: $word")
+            token is String && NUMBER.matches(token) -> stack.push(token.toInt())
+            else -> throw IllegalArgumentException("No definition available for operator \"$token\"")
         }
+    }
+
+    private fun toLowerCase(input: Any) = if (input is String) {
+        input.toLowerCase()
+    } else {
+        input
     }
 
     private fun define() {
