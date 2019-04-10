@@ -20,11 +20,15 @@ class ForthEvaluator {
         val definition = definitions[word]
         val operation = if (word is String) Operations.of(word) else null
         when {
-            word is String && DEFINITION_START.matches(word) -> defining = true
-            word is String && DEFINITION_END.matches(word) -> define()
+            word == DEFINITION_END -> define()
+            word is String && word.endsWith(DEFINITION_END) -> {
+                evaluateToken(word.substring(0, word.length - 1))
+                evaluateToken(";")
+            }
+            word == DEFINITION_START -> defining = true
             defining && definitionName == null -> definitionName = word as String
-            defining -> definitionOperations.add(word)
             definition != null -> definition.forEach { evaluateToken(it) }
+            defining -> definitionOperations.add(word)
             word is List<*> -> word.forEach { evaluateToken(it!!) }
             operation != null -> operation.performOperation(stack)
             word is String && NUMBER.matches(word) -> stack.push(word.toInt())
@@ -41,8 +45,8 @@ class ForthEvaluator {
 
     companion object {
         val NUMBER = Regex("[0-9]+")
-        val DEFINITION_START = Regex(":")
-        val DEFINITION_END = Regex(";")
+        const val DEFINITION_START = ":"
+        const val DEFINITION_END = ";"
     }
 
 }

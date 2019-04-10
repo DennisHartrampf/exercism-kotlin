@@ -285,7 +285,6 @@ class ForthEvaluatorTest {
                 forthEvaluator.evaluateProgram(listOf(": swap dup ;", "1 swap")))
     }
 
-    @Ignore
     @Test
     fun testCanOverrideBuiltInArithmeticOperators() {
         assertEquals(
@@ -294,7 +293,6 @@ class ForthEvaluatorTest {
 
     }
 
-    @Ignore
     @Test
     fun testCanUseDifferentWordsWithSameName(){
         assertEquals(
