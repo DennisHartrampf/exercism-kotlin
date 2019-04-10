@@ -10,18 +10,10 @@ class ForthEvaluator {
     fun evaluateProgram(instructions: List<String>): List<Int> {
         instructions.forEach { line ->
             line.split(" ").map { tokenize(it) }.forEach {
-                evaluate(it)
+                evaluateToken(it)
             }
         }
         return stack.reversed()
-    }
-
-    private fun evaluate(token: Any) {
-        if (token is List<*>) {
-            token.forEach { op -> evaluateToken(op!!) }
-        } else {
-            evaluateToken(token)
-        }
     }
 
     private fun tokenize(word: String): Any {
@@ -40,6 +32,7 @@ class ForthEvaluator {
     private fun evaluateToken(token: Any) {
         val definition = definitions[token]
         when {
+            token is List<*> -> token.forEach { evaluateToken(it!!) }
             token is DefinitionStart -> defining = true
             token is DefinitionEnd -> define()
             defining && definitionName == null -> definitionName = token as String
