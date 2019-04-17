@@ -1,15 +1,11 @@
 object Flattener {
 
-    fun flatten(input: Any?): List<Any> {
-        return flatten(mutableListOf(), input)
-    }
-
-    private fun flatten(flatList: MutableList<Any>, any: Any?): List<Any> {
-        when {
-            any is Iterable<*> -> any.forEach { flatten(flatList, it) }
-            any != null -> flatList.add(any)
+    fun flatten(input: Any?, flatList: List<Any> = listOf()): List<Any> {
+        return when {
+            input is Iterable<*> -> input.map { flatten(it, flatList) }.reduce { acc, list -> acc + list }
+            input != null -> flatList + input
+            else -> flatList
         }
-        return flatList
     }
 
 }
