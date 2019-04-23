@@ -1,22 +1,22 @@
-class Triangle(sideA: Double, sideB: Double, sideC: Double) {
+class Triangle private constructor(sides: List<Double>) {
 
     constructor(sideA: Number, sideB: Number, sideC: Number) : this(sideA.toDouble(), sideB.toDouble(), sideC.toDouble())
+    constructor(sideA: Double, sideB: Double, sideC: Double) : this(listOf(sideA, sideB, sideC))
+
+    val isEquilateral: Boolean
+    val isIsosceles: Boolean
+    val isScalene: Boolean
 
     init {
-        require(isTriangle(sideA, sideB, sideC))
+        require(isTriangle(sides))
+        val numberOfUniqueSides = sides.toSet().size
+        isEquilateral = numberOfUniqueSides == 1
+        isIsosceles = numberOfUniqueSides <= 2
+        isScalene = numberOfUniqueSides == 3
     }
 
-    private val numberOfUniqueSides = setOf(sideA, sideB, sideC).size
-    val isEquilateral = numberOfUniqueSides == 1
-    val isIsosceles = numberOfUniqueSides <= 2
-    val isScalene = numberOfUniqueSides == 3
+    private fun isTriangle(sides: List<Double>) = sides.all { it > 0 } && satisfiesTriangleInequality(sides)
 
-    private fun isTriangle(sideA: Double, sideB: Double, sideC: Double) =
-            allSidesGreaterZero(sideA, sideB, sideC) && satisfiesTriangleInequality(sideA, sideB, sideC)
-
-    private fun allSidesGreaterZero(sideA: Double, sideB: Double, sideC: Double) = sideA > 0 && sideB > 0 && sideC > 0
-
-    private fun satisfiesTriangleInequality(sideA: Double, sideB: Double, sideC: Double) =
-            2 * setOf(sideA, sideB, sideC).max()!! < sideA + sideB + sideC
+    private fun satisfiesTriangleInequality(sides: List<Double>) = 2 * sides.max()!! < sides.sum()
 
 }
