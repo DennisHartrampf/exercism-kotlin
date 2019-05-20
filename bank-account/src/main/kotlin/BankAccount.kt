@@ -1,20 +1,21 @@
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
-
 class BankAccount {
 
-    private val atomicBalance = AtomicInteger()
-    private val closed = AtomicBoolean()
+    private var closed = false
 
-    val balance: Int
-        get() = ifNotClosed { atomicBalance.get() }
+    var balance: Int = 0
+        @Synchronized get() = ifNotClosed { field }
 
-    fun adjustBalance(difference: Int) = ifNotClosed { atomicBalance.addAndGet(difference) }
+    @Synchronized
+    fun adjustBalance(difference: Int) = ifNotClosed { balance += difference }
 
-    fun close() = closed.set(true)
+    @Synchronized
+    fun close() {
+        closed = true
+    }
 
-    private fun ifNotClosed(function: () -> Int): Int {
-        return if (closed.get()) {
+    @Synchronized
+    private fun <T> ifNotClosed(function: () -> T): T {
+        return if (closed) {
             throw IllegalStateException("Account is closed!")
         } else {
             function.invoke()
