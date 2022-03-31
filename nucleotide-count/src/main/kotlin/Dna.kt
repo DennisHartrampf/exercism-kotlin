@@ -5,12 +5,13 @@ class Dna(sequence: String) {
     init {
         require(sequence.matches(PATTERN))
 
-        nucleotideCounts = ZERO_COUNTS + sequence.groupBy { it }.mapValues { it.value.size }
+        nucleotideCounts = ZERO_COUNTS + sequence.groupingBy { it }.eachCount()
     }
 
     companion object {
-        private val PATTERN = "[ACGT]*".toRegex()
-        private val ZERO_COUNTS = mapOf('A' to 0, 'C' to 0, 'G' to 0, 'T' to 0)
+        private const val NUCLEOTIDES = "ACGT"
+        private val PATTERN = "[$NUCLEOTIDES]*".toRegex()
+        private val ZERO_COUNTS = NUCLEOTIDES.associateWith { 0 }
     }
 
 }
