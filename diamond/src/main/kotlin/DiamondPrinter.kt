@@ -1,31 +1,28 @@
 class DiamondPrinter {
-    fun printToList(char: Char): List<String> {
-        return diamondOf(char).mirrored()
-    }
+    fun printToList(char: Char): List<String> = char.toDiamond()
 
-    private fun <T> List<T>.mirrored(): List<T> {
-        if (size <= 1) {
-            return this
-        }
-        return reversed() + subList(1, size)
-    }
+    private fun Char.toDiamond(): List<String> = toHalfDiamond(2 * (this - START_CHAR) + 1, 0, listOf()).mirrored()
 
-    private tailrec fun diamondOf(
-        char: Char,
-        spacing: Int = 2 * (char - START_CHAR) - 1,
-        padding: Int = 0,
-        list: List<String> = listOf()
-    ): List<String> {
-        return if (char == START_CHAR) {
-            val line = padding.spaces() + "A" + padding.spaces()
-            list + line
+    private tailrec fun Char.toHalfDiamond(size: Int, offset: Int, diamond: List<String>): List<String> {
+        val newDiamond = diamond + this.toDiamondLine(size, offset)
+        return if (this == START_CHAR) {
+            newDiamond
         } else {
-            val line = padding.spaces() + char + spacing.spaces() + char + padding.spaces()
-            diamondOf(char - 1, spacing - 2, padding + 1, list + line)
+            (this - 1).toHalfDiamond(size, offset + 1, newDiamond)
         }
     }
 
-    private fun Int.spaces() = " ".repeat(this)
+    private fun Char.toDiamondLine(size: Int, offset: Int): String =
+        CharArray(size) { ' ' }.apply {
+            this[offset] = this@toDiamondLine
+            this[size - offset - 1] = this@toDiamondLine
+        }.joinToString(separator = "")
+
+    private fun <T> List<T>.mirrored(): List<T> = if (size <= 1) {
+        this
+    } else {
+        reversed() + subList(1, size)
+    }
 
     companion object {
         private const val START_CHAR = 'A'
