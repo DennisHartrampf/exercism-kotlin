@@ -26,27 +26,34 @@ class DiamondPrinterTest {
     @Test
     fun testTwoByTwoDiamond() {
         val output = diamondPrinter.printToList('B')
-        assertThat(output).isEqualTo(listOf(
+        assertThat(output).isEqualTo(
+            listOf(
                 " A ",
                 "B B",
-                " A "))
+                " A "
+            )
+        )
     }
 
     @Test
     fun testThreeByThreeDiamond() {
         val output = diamondPrinter.printToList('C')
-        assertThat(output).isEqualTo(listOf(
+        assertThat(output).isEqualTo(
+            listOf(
                 "  A  ",
                 " B B ",
                 "C   C",
                 " B B ",
-                "  A  "))
+                "  A  "
+            )
+        )
     }
 
     @Test
     fun testFiveByFiveDiamond() {
         val output = diamondPrinter.printToList('E')
-        assertThat(output).isEqualTo(listOf(
+        assertThat(output).isEqualTo(
+            listOf(
                 "    A    ",
                 "   B B   ",
                 "  C   C  ",
@@ -55,13 +62,16 @@ class DiamondPrinterTest {
                 " D     D ",
                 "  C   C  ",
                 "   B B   ",
-                "    A    "))
+                "    A    "
+            )
+        )
     }
 
     @Test
     fun testFullDiamond() {
         val output = diamondPrinter.printToList('Z')
-        assertThat(output).isEqualTo(listOf(
+        assertThat(output).isEqualTo(
+            listOf(
                 "                         A                         ",
                 "                        B B                        ",
                 "                       C   C                       ",
@@ -112,7 +122,8 @@ class DiamondPrinterTest {
                 "                      D     D                      ",
                 "                       C   C                       ",
                 "                        B B                        ",
-                "                         A                         "))
+                "                         A                         "
+            )
+        )
     }
-
 }
