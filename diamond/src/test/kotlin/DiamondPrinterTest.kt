@@ -1,4 +1,5 @@
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Before
 import org.junit.Test
 
@@ -9,6 +10,11 @@ class DiamondPrinterTest {
     @Before
     fun setUp() {
         diamondPrinter = DiamondPrinter()
+    }
+
+    @Test
+    fun shouldThrowIllegalArgumentIfCharOutOfRange() {
+        assertThatThrownBy { diamondPrinter.printToList('a') }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
