@@ -4,11 +4,11 @@ class DiamondPrinter {
 
         val charRange = START_CHAR..char
         val size = charRange.count()
-        val quarterDiamond = charRange.map { it.toQuarterDiamondLine(size) }
+        val quarterDiamond = charRange.mapIndexed { offset, it -> it.toQuarterDiamondLine(size, offset) }
         return quarterDiamond.mirroredVertically().mirroredHorizontally()
     }
 
-    private fun Char.toQuarterDiamondLine(size: Int) = toString().padStart(size - (this - START_CHAR)).padEnd(size)
+    private fun Char.toQuarterDiamondLine(size: Int, offset: Int) = toString().padStart(size - offset).padEnd(size)
 
     private fun List<String>.mirroredVertically() = map { it.toList().mirroredHorizontally().joinToString("") }
 
