@@ -4,9 +4,11 @@ class ZebraPuzzle {
 
     private val solution: Solution = generatePossibleSolutions().findSolution()
 
-    fun drinksWater(): String = solution.houses.single { it.drink == Drinks.WATER }.nationality.toString().upperFirst()
+    fun drinksWater(): String = solution.who { it.drink == Drinks.WATER }
 
-    fun ownsZebra(): String = solution.houses.single { it.pet == Pets.ZEBRA }.nationality.toString().upperFirst()
+    fun ownsZebra(): String = solution.who { it.pet == Pets.ZEBRA }
+
+    private fun Solution.who(predicate: (House) -> Boolean) = houses.single(predicate).nationality.toString().upperFirst()
 
     private fun String.upperFirst() = "${first().uppercase()}${drop(1).lowercase()}"
 
@@ -20,7 +22,6 @@ class ZebraPuzzle {
         val brandsPermutations = Brands.values().permutations().toMutableList()
 
         reducePossibleSolutions(nationalitiesPermutations, colorsPermutations, petsPermutations, drinksPermutations, brandsPermutations)
-
         yieldPossibleSolutions(nationalitiesPermutations, drinksPermutations, colorsPermutations, petsPermutations, brandsPermutations)
     }
 
