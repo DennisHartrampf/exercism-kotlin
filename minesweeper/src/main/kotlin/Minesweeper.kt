@@ -5,17 +5,26 @@ data class MinesweeperBoard(val board: List<String>) {
     private val height = board.size
 
     init {
-        numberedBoard = board.map { line -> line.map { char -> if (char == MINE_CHAR) MineField else SafeField() } }
-        calculateMineCounts()
+        numberedBoard = board.toNumberedBoard()
     }
 
-    private fun calculateMineCounts() = numberedBoard.forEachIndexed { y, line ->
-        line.forEachIndexed { x, field ->
-            if (field is MineField) {
-                getAdjacentFields(x, y).map { (x, y) -> numberedBoard[y][x] }.filterIsInstance<SafeField>().forEach(SafeField::increment)
+    private fun List<String>.toNumberedBoard() = toFields().apply {
+        forEachIndexed { y, line ->
+            line.forEachIndexed { x, currentField ->
+                if (currentField is MineField) {
+                    increaseMineCountOfAdjacentFields(x, y)
+                }
             }
         }
     }
+
+    private fun List<String>.toFields() = mapIndexed { y, line -> line.toFields(y).toMutableList() }.toMutableList()
+
+    private fun String.toFields(y: Int) = mapIndexed { x, char -> if (char == MINE_CHAR) MineField(x, y) else SafeField(x, y) }
+
+    private fun MutableList<MutableList<Field>>.increaseMineCountOfAdjacentFields(x: Int, y: Int) =
+        getAdjacentFields(x, y).map { (x, y) -> this[y][x] }.filterIsInstance<SafeField>()
+            .forEach { field -> this[field.y][field.x] = field.incremented() }
 
     fun withNumbers(): List<String> = numberedBoard.map { line -> line.map { it.display() }.joinToString(separator = "") }
 
@@ -30,20 +39,18 @@ data class MinesweeperBoard(val board: List<String>) {
         private const val EMPTY_FIELD_CHAR = ' '
     }
 
-    private sealed class Field {
-        open fun increment() {}
+    private sealed class Field(val x: Int, val y: Int) {
+        open fun incremented() = this
         abstract fun display(): Char
     }
 
-    private object MineField : Field() {
+    private class MineField(x: Int, y: Int) : Field(x, y) {
         override fun display() = MINE_CHAR
     }
 
-    private class SafeField : Field() {
-        private var minesCounter = 0
-
-        override fun increment() {
-            minesCounter++
+    private class SafeField(x: Int, y: Int, private val minesCounter: Int = 0) : Field(x, y) {
+        override fun incremented(): Field {
+            return SafeField(x, y, minesCounter + 1)
         }
 
         override fun display() = if (minesCounter == 0) EMPTY_FIELD_CHAR else minesCounter.digitToChar()
